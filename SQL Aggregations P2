@@ -44,3 +44,14 @@ JOIN region r
 ON s.region_id = r.id
 GROUP BY r.name, w.channel
 ORDER BY num_events DESC;
+
+#Which accounts used facebook as a channel to contact customers more than 6 times?
+
+SELECT a.name, a.id, w.channel, COUNT(*) channel_use
+FROM accounts a
+JOIN web_events w
+ON w.account_id = a.id
+GROUP BY a.name, a.id, w.channel
+HAVING COUNT(*) > 6 AND w.channel = 'facebook'
+ORDER BY channel_use DESC;
+
