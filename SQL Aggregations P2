@@ -55,3 +55,12 @@ GROUP BY a.name, a.id, w.channel
 HAVING COUNT(*) > 6 AND w.channel = 'facebook'
 ORDER BY channel_use DESC;
 
+#In which month of which year did Walmart spend the most on gloss paper in terms of dollars?
+
+SELECT DATE_TRUNC('month', o.occurred_at) AS month, SUM(o.gloss_amt_usd) AS gloss_sales
+FROM orders o
+JOIN accounts a
+ON o.account_id = a.id
+WHERE a.name = 'Walmart'
+GROUP BY 1
+ORDER BY 2 DESC;
