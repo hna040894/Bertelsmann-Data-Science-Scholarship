@@ -1,0 +1,23 @@
+#Question 1: Which countries have the most Invoices?
+
+select count(total) invoices, BillingCountry from invoice
+group by BillingCountry
+order by invoices DESC;
+
+#Question 2: Which city has the best customers?
+
+select sum(total) total_invoice, BillingCity from invoice
+group by BillingCity
+order by invoices DESC
+limit 1;
+
+#Question 3: Who is the best customer?
+
+select c.CustomerID, sum(il.UnitPrice * il.Quantity) total_money_spent
+from Customer c JOIN Invoice i 
+ON c.CustomerId = i.CustomerID 
+JOIN InvoiceLine il
+ON i.InvoiceID = il.InvoiceID
+Group by 1
+ORDER by 2 desc
+LIMIT 1;
