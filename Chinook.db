@@ -73,3 +73,28 @@ on c.CustomerId = i.CustomerId
 WHERE ar.Name = 'Iron Maiden' 
 GROUP BY c.CustomerId 
 ORDER BY AmountSpent DESC;
+
+#Q1 Set 3
+
+#We determine the most popular genre as the genre with the highest amount of purchases. 
+#Write a query that returns each country along with the top Genre. 
+#For countries where the maximum number of purchases is shared return all Genres.
+
+with t1 as(
+	select count(i.invoiceid) Purchases, c.country Country, g.name, g.genreid
+			from Genre g join Track t on g.Genreid = t.Genreid
+						join InvoiceLine il on t.Trackid = il.Trackid
+						join Invoice i on il.Invoiceid = i.Invoiceid
+						join Customer c on i.Customerid = c.Customerid	
+			group by 2,3
+			order by 1 desc
+	),
+
+
+t2 as (
+		select MAX(Purchases) as MaxPurchases, Name, Country, GenreID
+		from t1
+		group by 3)
+		
+select t1.Purchases, t1.Country, t1.Name, t1.GenreID
+			from t1 join t2 on t1.country = t2.country
