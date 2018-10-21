@@ -98,3 +98,35 @@ t2 as (
 		
 select t1.Purchases, t1.Country, t1.Name, t1.GenreID
 			from t1 join t2 on t1.country = t2.country
+
+#Q2 Set 3
+#Return all the track names that have a song length longer than the average song length. 
+
+select Name, Milliseconds from (
+	select t.name, t.milliseconds,(select avg(milliseconds) from Track) as averagelength
+	from track t
+	where t.milliseconds > averagelength
+	order by t.milliseconds desc
+	);
+
+#Q3 Set 3
+#Write a query that returns the country along with the top customer and how much they spent. 
+#For countries where the top amount spent is shared, provide all customers who spent this amount.
+
+with t1 as(
+			select c.CustomerID, sum(i.Total) TotalSpent, c.lastname Lastname, c.firstname Firstname, c.country Country
+			from invoice i
+			join Customer c
+			on i.Customerid = c.Customerid
+			group by 1
+			),
+t2 as (
+	select CustomerID, Lastname, Firstname, max(TotalSpent) MaxSpent, Country
+	from t1
+	group by Country)
+
+select t1.Country, t1.Firstname, t1.Lastname, t1.TotalSpent, t1.CustomerID
+from t1 join t2
+on t1.customerID = t2.CustomerID
+where t1.totalspent = t2.maxspent
+order by 4 desc;	
